@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "canvas-confetti": "^1.9.3",
+    "dompurify": "^3.1.2",
     "solid-js": "^1.8.11"
   }
 }
