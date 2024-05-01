@@ -1,5 +1,6 @@
 import { createSignal, createEffect } from 'solid-js';
 import type { Component } from 'solid-js';
+import DOMPurify from 'dompurify';
 import confetti from 'canvas-confetti';
 
 import styles from './App.module.css';
@@ -15,16 +16,22 @@ const App: Component = () => {
     };
 
     const handleOkClick = () => {
-        setName(`Hello ${inputValue()}`);
+        const sanitizeInput = DOMPurify.sanitize(inputValue());
+        setName(`Hello ${sanitizeInput || "You"}`);
         setEditing(false);
         setShouldLaunchConfetti(true);
+    };
+
+    const handleInputChange = (e: Event) => {
+        const target = e.target as HTMLInputElement;
+        setInputValue(DOMPurify.sanitize(target.value));
     };
 
     // Setup the continuous confetti effect
     createEffect(() => {
         if (shouldLaunchConfetti()) {
-            const end = Date.now() + (15 * 1000);
-            const colors = ['#ffeaa7', '#6c5ce7'];
+            const end = Date.now() + (10 * 1000);
+            const colors = ['#00cec9', '#6c5ce7'];
 
             const frame = () => {
                 confetti({
@@ -60,7 +67,7 @@ const App: Component = () => {
                     <input
                         type="text"
                         value={inputValue()}
-                        onInput={(e) => setInputValue(e.currentTarget.value)}
+                        onInput={handleInputChange}
                     />
                     <button onClick={handleOkClick}>OK</button>
                 </div>
