@@ -1,27 +1,46 @@
+import { createSignal } from 'solid-js';
 import type { Component } from 'solid-js';
 
-import logo from './logo.svg';
 import styles from './App.module.css';
 
 const App: Component = () => {
-  return (
-    <div class={styles.App}>
-      <header class={styles.header}>
-        <img src={logo} class={styles.logo} alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          class={styles.link}
-          href="https://github.com/solidjs/solid"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn Solid
-        </a>
-      </header>
-    </div>
-  );
+    const [name, setName] = createSignal("Hello You");
+    const [editing, setEditing] = createSignal(false);
+    const [inputValue, setInputValue] = createSignal("You");
+
+    const handleEditClick = () => {
+        setEditing(true);
+    };
+
+    const handleOkClick = () => {
+        setName(`Hello ${inputValue()}`);
+        setEditing(false);
+    };
+
+    return (
+        <div class={styles.mainPageContainer}>
+            {editing() ? (
+                <div class={styles.inputBox}>
+                    <input
+                        type="text"
+                        value={inputValue()}
+                        onInput={(e) => setInputValue(e.currentTarget.value)}
+                    />
+                    <button onClick={handleOkClick}>OK</button>
+                </div>
+            ) : (
+                <div>
+                    {name() === "Hello You" ? (
+                        <span>
+                            Hello <span class={styles.namePrompt} onClick={handleEditClick}>You</span>
+                        </span>
+                    ) : (
+                        <span>{name()}</span>
+                    )}
+                </div>
+            )}
+        </div>
+    );
 };
 
 export default App;
